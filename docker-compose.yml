@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # 1. Database Service
+  postgres:
+    image: postgres:15
+    container_name: fintech_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: fintech_ledger
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # ✅ NEW: The Health Check (Are you awake yet?)
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. Java Backend Service
+  backend:
+    build: ./ledger
+    container_name: fintech_backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - AI_API_KEY=${AI_API_KEY}
+    depends_on:
+      postgres:
+        # ✅ NEW: Wait until the check passes!
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # 3. React Frontend Service
+  frontend:
+    build: ./fintech-frontend
+    container_name: fintech_frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
