@@ -27,7 +27,8 @@ import {
   Trash2,
   AlertTriangle
 } from "lucide-react";
-
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+console.log("Connected to:", API_URL);
 export default function Dashboard() {
   const navigate = useNavigate();
   const [balance, setBalance] = useState(0);
@@ -97,7 +98,7 @@ export default function Dashboard() {
   const saveEdit = async () => {
     const token = localStorage.getItem("token");
     try {
-      await axios.put(`http://localhost:8080/api/transactions/${editingId}`, editForm, {
+      await axios.put(`${API_URL}/api/transactions/${editingId}`, editForm, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -119,7 +120,7 @@ export default function Dashboard() {
     
     const token = localStorage.getItem("token");
     try {
-      await axios.delete(`http://localhost:8080/api/transactions/${deletingTxn.id}`, {
+      await axios.delete(`${API_URL}/api/transactions/${deletingTxn.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       showToast("Transaction Deleted", "success");
@@ -132,7 +133,7 @@ export default function Dashboard() {
 
   const fetchData = async (token) => {
     try {
-      const res = await axios.get("http://localhost:8080/api/transactions", {
+      const res = await axios.get(`${API_URL}/api/transactions`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setHistory(res.data);
@@ -149,7 +150,7 @@ export default function Dashboard() {
   const fetchBrainData = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.get("http://localhost:8080/api/transactions/training-data", {
+      const res = await axios.get(`${API_URL}/api/transactions/training-data`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setBrainData(res.data);
@@ -175,7 +176,7 @@ export default function Dashboard() {
     setLoading(true);
     const token = localStorage.getItem("token");
     try {
-      await axios.post("http://localhost:8080/api/transactions/ai", 
+      await axios.post(`${API_URL}/api/transactions/ai`, 
         { text: inputText }, 
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -195,7 +196,7 @@ export default function Dashboard() {
   const handleManualFix = async () => {
     const token = localStorage.getItem("token");
     try {
-      await axios.post("http://localhost:8080/api/transactions/spend", {
+      await axios.post(`${API_URL}/api/transactions/spend`, {
         amount: parseFloat(amount),
         category: category,
         merchantName: merchant,
@@ -217,7 +218,7 @@ export default function Dashboard() {
   const handleDeposit = async () => {
     const token = localStorage.getItem("token");
     try {
-      await axios.post("http://localhost:8080/api/transactions/deposit", {
+      await axios.post(`${API_URL}/api/transactions/deposit`, {
         amount: parseFloat(amount),
         source: "User Deposit",
         note: note

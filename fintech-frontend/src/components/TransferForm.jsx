@@ -5,6 +5,7 @@ export default function TransferForm({refreshDashboard}){
     const [receiverId, setReceiverId] = useState('');
     const [amount, setAmount] = useState('');
     const [message, setMessage] = useState('');
+    const API_URL = import.meta.env.VITE_API_BASE_URL;
 
     const handleTransfer = async(e) => {
         e.preventDefault();
@@ -15,7 +16,7 @@ export default function TransferForm({refreshDashboard}){
                 receiverId: parseInt(receiverId),
                 amount: parseFloat(amount) 
             };
-            const response = await axios.post('http://localhost:8080/api/transfer', payload);
+            const response = await axios.post(`${API_URL}/api/transfer`, payload);
             console.log("Transfer Response: ", response.data);
             setMessage("Transfer successful!");
             setAmount('');

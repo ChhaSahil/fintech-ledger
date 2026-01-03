@@ -6,7 +6,7 @@ export default function TransactionForm({ refreshDashboard, accountId }) {
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [status, setStatus] = useState(null);
-
+    const API_URL = import.meta.env.VITE_API_BASE_URL;
     // 🆕 Manual Mode State (Hidden by default)
     const [showManual, setShowManual] = useState(false);
     const [manualData, setManualData] = useState({
@@ -25,7 +25,7 @@ export default function TransactionForm({ refreshDashboard, accountId }) {
 
         try {
             const response = await axios.post(
-                `http://localhost:8080/api/transfer/ai?accountId=${accountId}`,
+                `${API_URL}/api/transfer/ai?accountId=${accountId}`,
                 input,
                 { headers: { 'Content-Type': 'text/plain' } }
             );
@@ -53,10 +53,10 @@ export default function TransactionForm({ refreshDashboard, accountId }) {
         
         try {
             // A. Record the actual transaction
-            await axios.post(`http://localhost:8080/api/transfer/manual?accountId=${accountId}`, manualData);
+            await axios.post(`${API_URL}/api/transfer/manual?accountId=${accountId}`, manualData);
 
             // B. Teach the AI (Send original text + correct values)
-            await axios.post('http://localhost:8080/api/transfer/train', {
+            await axios.post(`${API_URL}/api/transfer/train`, {
                 userSentence: input, 
                 amount: manualData.amount,
                 category: manualData.category,

@@ -9,6 +9,7 @@ export default function Register() {
     password: "",
     phoneNumber: ""
   });
+  const API_URL = import.meta.env.VITE_API_BASE_URL;
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ export default function Register() {
 
     try {
       // Calls your Java Endpoint: AuthController.register()
-      await axios.post("http://localhost:8080/api/auth/register", formData);
+      await axios.post(`${API_URL}/api/auth/register`, formData);
       
       // On success:
       alert("Registration Successful! Please Login.");

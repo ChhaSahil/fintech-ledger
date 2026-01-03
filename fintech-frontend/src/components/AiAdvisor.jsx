@@ -10,6 +10,7 @@ export default function AiAdvisor() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef(null);
+  const API_URL = import.meta.env.VITE_API_BASE_URL;
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -27,7 +28,7 @@ export default function AiAdvisor() {
     const token = localStorage.getItem("token");
 
     try {
-      const res = await axios.post("http://localhost:8080/api/analytics/ask", 
+      const res = await axios.post(`${API_URL}/api/analytics/ask`, 
         userMsg, // Sending string directly as per your Controller
         { headers: { Authorization: `Bearer ${token}`, "Content-Type": "text/plain" } }
       );

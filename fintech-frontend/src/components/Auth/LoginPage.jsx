@@ -7,6 +7,7 @@ export default function Login() {
     email: "",
     password: ""
   });
+  const API_URL = import.meta.env.VITE_API_BASE_URL;
   const [error, setError] = useState("");
   const navigate = useNavigate(); // 👈 Create the navigation hook
 
@@ -20,7 +21,7 @@ export default function Login() {
     
     try {
       // 1. Send Login Request
-      const res = await axios.post("http://localhost:8080/api/auth/login", formData);
+      const res = await axios.post(`${API_URL}/api/auth/login`, formData);
       
       // 2. Save the Token
       localStorage.setItem("token", res.data); 
